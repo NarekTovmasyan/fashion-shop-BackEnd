@@ -19,7 +19,7 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/{id}")
-    Order getById(@PathVariable long id){
+    List<Order> getById(@PathVariable String id){
         return orderService.getById(id);
     }
 
@@ -34,7 +34,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    Order update(@PathVariable long id, OrderUpdateReqDto reqDto){
+    Order update(@PathVariable String id, OrderUpdateReqDto reqDto){
         if (!OrderDtoValidator.chekOrderUpdateDto(reqDto)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,

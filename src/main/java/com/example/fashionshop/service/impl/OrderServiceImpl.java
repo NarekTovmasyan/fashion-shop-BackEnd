@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order create(Order order) {
-        return null;
+        return orderRepository.save(order);
     }
 
     /***
@@ -36,12 +36,12 @@ public class OrderServiceImpl implements OrderService {
      * @return returns founded object or throws @ResponseStatusException(BAD_REQUEST).
      */
     @Override
-    public Order getById(long id) {
+    public List<Order> getById(String id) {
         return orderRepository
-                .findById(id)
+                .getAllByUserId(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "product with id:" + id + "  not found in database")
+                        "Orders with user_id:" + id + "  not found in database")
                 );
     }
 
@@ -57,23 +57,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public Order update(long id, OrderUpdateReqDto reqDto) {
-        Order fromDb = orderRepository
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        "product with id:" + id + "  not found in database")
-                );
-        fromDb.setCount(reqDto.getCount());
-        fromDb.setOrderStatus(reqDto.getOrderStatus());
-
-        return fromDb;
-
+    public Order update(String id, OrderUpdateReqDto reqDto) {
+//        Order fromDb = orderRepository
+//                .findById(id)
+//                .orElseThrow(() -> new ResponseStatusException(
+//                        HttpStatus.BAD_REQUEST,
+//                        "product with id:" + id + "  not found in database")
+//                );
+//        fromDb.setCount(reqDto.getCount());
+//        fromDb.setOrderStatus(reqDto.getOrderStatus());
+//
+//        return fromDb;
+        return null;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(String id) {
 
     }
 }
+
 

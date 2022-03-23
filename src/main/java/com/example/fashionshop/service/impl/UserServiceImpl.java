@@ -3,12 +3,16 @@ package com.example.fashionshop.service.impl;
 import com.example.fashionshop.model.User;
 import com.example.fashionshop.repository.UserRepository;
 import com.example.fashionshop.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -31,10 +35,14 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User getById(String id) {
-        return userRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.BAD_REQUEST, "user with id:" + id + "not founded"));
+        return userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "user with id:" + id + " not founded"));
+    }
+
+    @Override
+    public User getByIdForSingUp(String id) {
+        return userRepository.getById(id);
     }
 
     /***
@@ -51,4 +59,3 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 }
-

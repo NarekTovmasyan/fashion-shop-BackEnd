@@ -9,8 +9,16 @@ import javax.persistence.Id;
 @Data
 @ToString
 @Entity
-public class User {
 
+public class User {
     @Id
     private String id;
+
+    private String email;
+
+    private String name;
+
+    private String picture;
+
+
 }

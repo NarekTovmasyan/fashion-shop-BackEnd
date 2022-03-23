@@ -22,6 +22,4 @@ public final class ProductValidator {
     public static boolean validateCreateProduct(Product product) {
         return validateUpdateProduct(product);
     }
-
-
 }

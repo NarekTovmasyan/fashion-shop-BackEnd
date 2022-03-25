@@ -20,7 +20,6 @@ public final class UserValidator {
         UserValidator.userService = userServiceT;
     }
 
-
     public static boolean checkUserAuthorized(String user_id) {
         return !(user_id == null || userService.getById(user_id) == null);
     }
@@ -34,6 +33,4 @@ public final class UserValidator {
         }
         return true;
     }
-
-
 }

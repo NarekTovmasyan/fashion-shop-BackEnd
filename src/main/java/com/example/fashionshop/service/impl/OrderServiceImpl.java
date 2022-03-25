@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
      * @return returns founded object or throws @ResponseStatusException(BAD_REQUEST).
      */
     @Override
-    public List<Order> getById(String id) {
+    public List<Order> getAllById(String id) {
         return orderRepository
                 .getAllByUserId(id)
                 .orElseThrow(() -> new ResponseStatusException(

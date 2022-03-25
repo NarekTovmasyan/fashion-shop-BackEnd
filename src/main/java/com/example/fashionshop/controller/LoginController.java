@@ -16,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
  * 1. need to add checking for duplicated signups
  */
 
-
 @RestController
 @RequestMapping("/api/v1/login")
 public class LoginController {
@@ -38,7 +37,5 @@ public class LoginController {
         }
         return ResponseEntity.ok(userService.create(user));
     }
-
-
 }
 

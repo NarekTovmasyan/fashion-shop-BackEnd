@@ -1,8 +1,10 @@
 package com.example.fashionshop.util;
 
 import com.example.fashionshop.model.Product;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 public class FileDatasource {
 
@@ -38,9 +40,24 @@ public class FileDatasource {
         return imageFolder.getPath();
     }
 
-    public   String getFolderPathByProduct(Product product){
+    public String getFolderPathByProduct(Product product){
         return dataFolder.getPath()+File.separator+product.getName()+"_"+product.getId();
     }
 
+    public void deleteProductFolderByFolderName(String folderName){
+
+        File imageFolder = new File(
+                new File("").getAbsolutePath() +
+                        File.separator
+                        + FileConstants.DATA_FOLDER_NAME
+                        + File.separator
+                        + folderName);
+        try {
+            FileUtils.deleteDirectory(imageFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

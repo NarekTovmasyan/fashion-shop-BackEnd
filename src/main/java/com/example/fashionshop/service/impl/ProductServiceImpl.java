@@ -36,6 +36,7 @@ public class ProductServiceImpl implements ProductService {
      * @return returns founded object or throws @ResponseStatusException(BAD_REQUEST).
      */
     @Override
+
     public Product getById(long id) {
         return productRepository
                 .findById(id)

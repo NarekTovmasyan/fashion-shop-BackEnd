@@ -1,6 +1,7 @@
 package com.example.fashionshop.service.impl;
 
 import com.example.fashionshop.model.Order;
+import com.example.fashionshop.model.commons.enums.OrderStatus;
 import com.example.fashionshop.model.dto.requestDto.OrderUpdateReqDto;
 import com.example.fashionshop.repository.OrderRepository;
 import com.example.fashionshop.service.OrderService;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +57,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    @Transactional
-    @Override
-    public Order update(String id, OrderUpdateReqDto reqDto) {
+//    @Transactional
+//    @Override
+//    public Order update(String id, OrderUpdateReqDto reqDto) {
 //        Order fromDb = orderRepository
 //                .findById(id)
 //                .orElseThrow(() -> new ResponseStatusException(
@@ -68,12 +70,19 @@ public class OrderServiceImpl implements OrderService {
 //        fromDb.setOrderStatus(reqDto.getOrderStatus());
 //
 //        return fromDb;
-        return null;
+//        return null;
+//    }
+
+    @Override
+    public void delete(Long id) {
+        orderRepository.deleteById(id);
     }
 
     @Override
-    public void delete(String id) {
-
+    public List<Order> getOrderByStatus(String userId, OrderStatus orderStatus) {
+        return getAllById(userId).stream()
+                .filter(item->item.getOrderStatus()==orderStatus)
+                .collect(Collectors.toList());
     }
 }
 

@@ -7,7 +7,7 @@ import com.example.fashionshop.validation.commons.StockValidator;
 
 public final class ProductValidator {
     public static boolean validateUpdateProduct(Product product) {
-        ImageValidator.checkDefaultImage(product);
+        //ImageValidator.checkDefaultImage(product);
 
         if (product.getName().length() == 0 ||
                 product.getPrice() < 0 ||

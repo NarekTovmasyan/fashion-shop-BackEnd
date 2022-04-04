@@ -1,6 +1,7 @@
 package com.example.fashionshop.service;
 
 import com.example.fashionshop.model.Order;
+import com.example.fashionshop.model.commons.enums.OrderStatus;
 import com.example.fashionshop.model.dto.requestDto.OrderUpdateReqDto;
 
 import java.util.List;
@@ -13,7 +14,9 @@ public interface OrderService {
 
     List<Order> getAll();
 
-    Order update(String id, OrderUpdateReqDto order);
+//    Order update(String id, OrderUpdateReqDto order);
 
-    void delete(String id);
+    void delete(Long id);
+
+    List<Order> getOrderByStatus(String userId, OrderStatus orderStatus);
 }

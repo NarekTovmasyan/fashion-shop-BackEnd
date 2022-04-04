@@ -31,6 +31,12 @@ public class ImageController {
                 .body(imageService.readAllByProductId(productId,img_id));
     }
 
+    @PutMapping("/update/{product_id}")
+    ResponseEntity<Void> update(@PathVariable("product_id") long productId,@RequestParam("image") MultipartFile[] images){
+        imageService.update(productId, images);
+        return ResponseEntity.ok().build();
+    }
+
 
 
 }

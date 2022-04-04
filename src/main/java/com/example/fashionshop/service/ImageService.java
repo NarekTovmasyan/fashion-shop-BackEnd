@@ -8,14 +8,10 @@ import java.io.IOException;
 
 public interface ImageService {
 
-
     Product saveImagesToFolder(long productId, MultipartFile[] images);
 
     byte[] readAllByProductId(long productId, long imgId) throws IOException;
 
-    Image update(MultipartFile file);
-
-    void delete(MultipartFile file);
-
+    Image update(long productId, MultipartFile[] images);
 
 }

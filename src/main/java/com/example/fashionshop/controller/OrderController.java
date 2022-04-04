@@ -1,6 +1,7 @@
 package com.example.fashionshop.controller;
 
 import com.example.fashionshop.model.Order;
+import com.example.fashionshop.model.commons.enums.OrderStatus;
 import com.example.fashionshop.model.dto.requestDto.OrderUpdateReqDto;
 import com.example.fashionshop.service.OrderService;
 import com.example.fashionshop.validation.OrderValidator;
@@ -27,7 +28,7 @@ public class OrderController {
 
 
     @GetMapping("/user-order")
-    ResponseEntity<List<Order>> getById(@RequestHeader("user_id") String userId) {
+    ResponseEntity<List<Order>> getOrdersByUserId(@RequestHeader("user_id") String userId) {
 
         if (!UserValidator.checkUserAuthorized(userId)) {
             throw new ResponseStatusException(
@@ -39,6 +40,17 @@ public class OrderController {
 
     }
 
+    @GetMapping("/order-status")
+    ResponseEntity<List<Order>> getOrderByStatus(@RequestHeader("user_id") String userId, @RequestHeader("status") OrderStatus orderStatus){
+        if (!UserValidator.checkUserAuthorized(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "user is UNAUTHORIZED, plz SignUp at first"
+            );
+        }
+
+        return ResponseEntity.ok(orderService.getOrderByStatus(userId, orderStatus));
+    }
 
     @PostMapping
     ResponseEntity<Order> create(@RequestBody Order order) {
@@ -54,21 +66,21 @@ public class OrderController {
     }
 
 
-    @PutMapping("/{user_id}/{order_id}")
-    Order update(@PathVariable("user_id") String userId, @PathVariable("order_id") String orderId, OrderUpdateReqDto reqDto) {
-        if (!OrderDtoValidator.chekOrderUpdateDto(reqDto)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "user data is invalid to update users order"
-            );
-        }
-        if (!UserValidator.checkUserAuthorized(userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "user is UNAUTHORIZED, plz AUTHORIZE at first"
-            );
-        }
-        return orderService.update(orderId, reqDto);
-    }
+//    @PutMapping("/{user_id}/{order_id}")
+//    Order update(@PathVariable("user_id") String userId, @PathVariable("order_id") String orderId, OrderUpdateReqDto reqDto) {
+//        if (!OrderDtoValidator.chekOrderUpdateDto(reqDto)) {
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    "user data is invalid to update users order"
+//            );
+//        }
+//        if (!UserValidator.checkUserAuthorized(userId)) {
+//            throw new ResponseStatusException(
+//                    HttpStatus.UNAUTHORIZED,
+//                    "user is UNAUTHORIZED, plz AUTHORIZE at first"
+//            );
+//        }
+//        return orderService.update(orderId, reqDto);
+//    }
 
 }

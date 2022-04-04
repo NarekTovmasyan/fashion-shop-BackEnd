@@ -1,6 +1,7 @@
 package com.example.fashionshop.controller;
 
 import com.example.fashionshop.model.Product;
+import com.example.fashionshop.model.dto.responseDto.ResponseDto;
 import com.example.fashionshop.service.ImageService;
 import com.example.fashionshop.service.ProductService;
 import com.example.fashionshop.validation.ProductValidator;
@@ -34,31 +35,39 @@ public class ProductController {
 
 
     @PostMapping
-    ResponseEntity<Product> create(@RequestBody Product product) {
+    ResponseEntity<ResponseDto> create(@RequestBody Product product) {
         if (!ProductValidator.validateCreateProduct(product)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "user data is invalid to create product"
             );
         }
-        return ResponseEntity.ok(productService.create(product));
+        Product created = productService.create(product);
+        ResponseDto responseDto=new ResponseDto("Product created.");
+        responseDto.addInfo("productId", String.valueOf(created.getId()));
+        return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<Product> update(@PathVariable long id, @RequestBody Product product) {
+    ResponseEntity<ResponseDto> update(@PathVariable long id, @RequestBody Product product) {
         if (!ProductValidator.validateUpdateProduct(product)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "user data is invalid to update product with id:" + id
             );
         }
-        return ResponseEntity.ok(productService.update(id, product));
+        Product updated = productService.update(id, product);
+        ResponseDto responseDto=new ResponseDto("Product updated.");
+        responseDto.addInfo("productId", String.valueOf(updated.getId()));
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable long id) {
+    ResponseEntity<ResponseDto> delete(@PathVariable long id) {
         productService.delete(id);
-        return ResponseEntity.ok().build();
+        ResponseDto responseDto=new ResponseDto("Product deleted.");
+        responseDto.addInfo("productId", String.valueOf(id));
+        return ResponseEntity.ok(responseDto);
     }
 
 

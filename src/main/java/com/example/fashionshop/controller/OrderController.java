@@ -66,21 +66,19 @@ public class OrderController {
     }
 
 
-//    @PutMapping("/{user_id}/{order_id}")
-//    Order update(@PathVariable("user_id") String userId, @PathVariable("order_id") String orderId, OrderUpdateReqDto reqDto) {
-//        if (!OrderDtoValidator.chekOrderUpdateDto(reqDto)) {
-//            throw new ResponseStatusException(
-//                    HttpStatus.BAD_REQUEST,
-//                    "user data is invalid to update users order"
-//            );
-//        }
-//        if (!UserValidator.checkUserAuthorized(userId)) {
-//            throw new ResponseStatusException(
-//                    HttpStatus.UNAUTHORIZED,
-//                    "user is UNAUTHORIZED, plz AUTHORIZE at first"
-//            );
-//        }
-//        return orderService.update(orderId, reqDto);
-//    }
+    @PutMapping("/change-status/{order_id}/{status}")
+    ResponseEntity<Void> changeStatus(@RequestHeader("user_id") String userId,
+                                      @PathVariable("order_id") Long orderId,
+                                      @PathVariable("status") OrderStatus orderStatus){
+        if (!UserValidator.checkUserAuthorized(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "user is UNAUTHORIZED, plz SignUp at first"
+            );
+        }
+        orderService.changeStatus(orderId, orderStatus);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

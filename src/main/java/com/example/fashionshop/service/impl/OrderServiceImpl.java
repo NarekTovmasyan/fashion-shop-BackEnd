@@ -84,6 +84,15 @@ public class OrderServiceImpl implements OrderService {
                 .filter(item->item.getOrderStatus()==orderStatus)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    @Transactional
+    public void changeStatus(Long orderId, OrderStatus orderStatus) {
+        Order fromDb = orderRepository.findById(orderId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Order with id:" + orderId + "  not found in database"));
+        fromDb.setOrderStatus(orderStatus);
+    }
 }
 
 

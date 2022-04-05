@@ -3,6 +3,7 @@ package com.example.fashionshop.controller;
 import com.example.fashionshop.model.Order;
 import com.example.fashionshop.model.commons.enums.OrderStatus;
 import com.example.fashionshop.model.dto.requestDto.OrderUpdateReqDto;
+import com.example.fashionshop.model.dto.responseDto.ResponseDto;
 import com.example.fashionshop.service.OrderService;
 import com.example.fashionshop.validation.OrderValidator;
 import com.example.fashionshop.validation.UserValidator;
@@ -25,7 +26,6 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-
 
     @GetMapping("/user-order")
     ResponseEntity<List<Order>> getOrdersByUserId(@RequestHeader("user_id") String userId) {
@@ -53,23 +53,23 @@ public class OrderController {
     }
 
     @PostMapping
-    ResponseEntity<Order> create(@RequestBody Order order) {
+    ResponseEntity<ResponseDto> create(@RequestBody Order order) {
         if (!OrderValidator.validateOrder(order)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Invalid order Structure for accepting Order"
             );
         }
-
-        return ResponseEntity.ok(orderService.create(order));
-
+        Order created = orderService.create(order);
+        ResponseDto responseDto = new ResponseDto("Order created.");
+        responseDto.addInfo("OrderId", String.valueOf(created.getId()));
+        return ResponseEntity.ok(responseDto);
     }
 
-
     @PutMapping("/change-status/{order_id}/{status}")
-    ResponseEntity<Void> changeStatus(@RequestHeader("user_id") String userId,
-                                      @PathVariable("order_id") Long orderId,
-                                      @PathVariable("status") OrderStatus orderStatus){
+    ResponseEntity<ResponseDto> changeStatus(@RequestHeader("user_id") String userId,
+                                             @PathVariable("order_id") Long orderId,
+                                             @PathVariable("status") OrderStatus orderStatus){
         if (!UserValidator.checkUserAuthorized(userId)) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
@@ -77,8 +77,16 @@ public class OrderController {
             );
         }
         orderService.changeStatus(orderId, orderStatus);
-        return ResponseEntity.ok().build();
+        ResponseDto responseDto = new ResponseDto("Status is change.");
+        responseDto.addInfo("OrderStatus", String.valueOf(orderId));
+        return ResponseEntity.ok(responseDto);
     }
 
-
+    @DeleteMapping("/{order_id}")
+    ResponseEntity<ResponseDto> delete(@PathVariable("order_id") Long id) {
+        orderService.delete(id);
+        ResponseDto responseDto = new ResponseDto("Order GBRSH.");
+        responseDto.addInfo("OrderId", String.valueOf(id));
+        return ResponseEntity.ok(responseDto);
+    }
 }

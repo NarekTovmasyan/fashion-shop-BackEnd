@@ -1,5 +1,8 @@
 package com.example.fashionshop.controller;
 
+import com.example.fashionshop.model.Product;
+import com.example.fashionshop.model.commons.Image;
+import com.example.fashionshop.model.dto.responseDto.ResponseDto;
 import com.example.fashionshop.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,11 +35,11 @@ public class ImageController {
     }
 
     @PutMapping("/update/{product_id}")
-    ResponseEntity<Void> update(@PathVariable("product_id") long productId,@RequestParam("image") MultipartFile[] images){
-        imageService.update(productId, images);
-        return ResponseEntity.ok().build();
+    ResponseEntity<ResponseDto> update(@PathVariable("product_id") long productId,@RequestParam("image") MultipartFile[] images){
+        Image updated = imageService.update(productId, images);
+        ResponseDto responseDto=new ResponseDto("images updated.");
+        responseDto.addInfo("productId", String.valueOf(productId));
+        return ResponseEntity.ok(responseDto);
     }
-
-
 
 }

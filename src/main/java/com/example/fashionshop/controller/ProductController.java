@@ -33,10 +33,10 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAll());
     }
 
-
     @PostMapping
-    ResponseEntity<ResponseDto> create(@RequestBody Product product) {
-        if (!ProductValidator.validateCreateProduct(product)) {
+    ResponseEntity<ResponseDto> create(@RequestBody Product product,
+                                       @RequestHeader String userId) {
+        if (!ProductValidator.validateCreateProduct(product, userId)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "user data is invalid to create product"
@@ -49,8 +49,10 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<ResponseDto> update(@PathVariable long id, @RequestBody Product product) {
-        if (!ProductValidator.validateUpdateProduct(product)) {
+    ResponseEntity<ResponseDto> update(@PathVariable long id,
+                                       @RequestBody Product product,
+                                       @RequestHeader String userId) {
+        if (!ProductValidator.validateUpdateProduct(product, userId)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "user data is invalid to update product with id:" + id
@@ -63,12 +65,17 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<ResponseDto> delete(@PathVariable long id) {
+    ResponseEntity<ResponseDto> delete(@PathVariable long id, @RequestHeader String userId){
+        if (!ProductValidator.validateDeleteProduct(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "user is unauthorized, please sign in first:"
+            );
+        }
+        imageService.delete(id);
         productService.delete(id);
-        ResponseDto responseDto=new ResponseDto("Product deleted.");
+        ResponseDto responseDto = new ResponseDto("Product deleted.");
         responseDto.addInfo("productId", String.valueOf(id));
         return ResponseEntity.ok(responseDto);
     }
-
-
 }

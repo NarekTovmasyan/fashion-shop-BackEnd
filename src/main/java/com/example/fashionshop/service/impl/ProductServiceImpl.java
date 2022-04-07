@@ -9,13 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-
 
     @Autowired
     private ProductRepository productRepository;
@@ -36,7 +36,6 @@ public class ProductServiceImpl implements ProductService {
      * @return returns founded object or throws @ResponseStatusException(BAD_REQUEST).
      */
     @Override
-
     public Product getById(long id) {
         return productRepository
                 .findById(id)
@@ -44,6 +43,14 @@ public class ProductServiceImpl implements ProductService {
                         HttpStatus.BAD_REQUEST,
                         "product with id:" + id + "  not found in database")
                 );
+    }
+
+    @Override
+    public List<Product> getByAnyText(String anytext) {
+        List<Product> filter = getAll().stream().filter((item)->
+                        item.toString().toLowerCase(Locale.ROOT).contains(anytext.toLowerCase(Locale.ROOT)))
+                .collect(Collectors.toList());
+        return filter;
     }
 
     /***
@@ -90,8 +97,6 @@ public class ProductServiceImpl implements ProductService {
     public void delete(long id) {
         productRepository.deleteById(id);
     }
-
-
 }
 
 

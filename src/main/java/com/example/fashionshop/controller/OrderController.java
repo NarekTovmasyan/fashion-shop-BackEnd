@@ -27,6 +27,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @GetMapping("get-all")
+    ResponseEntity<List<Order>> getAll() {
+        return ResponseEntity.ok(orderService.getAll());
+    }
+
     @GetMapping("/user-order")
     ResponseEntity<List<Order>> getOrdersByUserId(@RequestHeader("user_id") String userId) {
 
@@ -41,7 +46,8 @@ public class OrderController {
     }
 
     @GetMapping("/order-status")
-    ResponseEntity<List<Order>> getOrderByStatus(@RequestHeader("user_id") String userId, @RequestHeader("status") OrderStatus orderStatus){
+    ResponseEntity<List<Order>> getOrderByStatus(@RequestHeader("user_id") String userId,
+                                                 @RequestHeader("status") OrderStatus orderStatus){
         if (!UserValidator.checkUserAuthorized(userId)) {
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
@@ -53,8 +59,9 @@ public class OrderController {
     }
 
     @PostMapping
-    ResponseEntity<ResponseDto> create(@RequestBody Order order) {
-        if (!OrderValidator.validateOrder(order)) {
+    ResponseEntity<ResponseDto> create(@RequestBody Order order,
+                                       @RequestHeader String userId) {
+        if (!OrderValidator.validateOrder(order, userId)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Invalid order Structure for accepting Order"
@@ -83,7 +90,14 @@ public class OrderController {
     }
 
     @DeleteMapping("/{order_id}")
-    ResponseEntity<ResponseDto> delete(@PathVariable("order_id") Long id) {
+    ResponseEntity<ResponseDto> delete(@PathVariable("order_id") Long id,
+                                       @RequestHeader String userId) {
+        if (!UserValidator.checkUserAuthorized(userId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "user is unauthorized, please sign in first:"
+            );
+        }
         orderService.delete(id);
         ResponseDto responseDto = new ResponseDto("Order GBRSH.");
         responseDto.addInfo("OrderId", String.valueOf(id));

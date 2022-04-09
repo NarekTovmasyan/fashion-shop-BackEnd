@@ -1,5 +1,6 @@
 package com.example.fashionshop.controller;
 
+import com.example.fashionshop.model.Product;
 import com.example.fashionshop.model.commons.Image;
 import com.example.fashionshop.model.dto.responseDto.ResponseDto;
 import com.example.fashionshop.service.ImageService;
@@ -28,7 +29,7 @@ public class ImageController {
     private ProductService productService;
 
     @PostMapping("/add/{product_id}")
-    void addImage(@PathVariable("product_id") long productId,
+    ResponseEntity<ResponseDto> addImage(@PathVariable("product_id") long productId,
                   @RequestParam("image") MultipartFile[] multipartFile,
                   @RequestHeader String userId) {
         if (!UserValidator.checkUserAuthorized(userId)) {
@@ -40,8 +41,10 @@ public class ImageController {
         String serverUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String requestMapping = this.getClass().getAnnotation(RequestMapping.class).value()[0];
         String imageMappingPath = serverUrl+ "/" +requestMapping + IMAGE_URL_MAPPING_POST_FIX;
-
-        imageService.saveImagesToFolder(productId, multipartFile, imageMappingPath);
+        Product created = imageService.saveImagesToFolder(productId, multipartFile, imageMappingPath);
+        ResponseDto responseDto = new ResponseDto("Image created.");
+        responseDto.addInfo("productId", String.valueOf(productId));
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping(value = "/get/{folder_name}/{img_name}")
@@ -65,7 +68,6 @@ public class ImageController {
             );
         }
         Image updated = imageService.update(productId, images);
-        System.out.println(updated);
         ResponseDto responseDto = new ResponseDto("Image updated.");
         responseDto.addInfo("productId", String.valueOf(productId));
         return ResponseEntity.ok(responseDto);

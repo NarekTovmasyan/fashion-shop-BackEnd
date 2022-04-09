@@ -36,7 +36,9 @@ public class ProductController {
     @PostMapping
     ResponseEntity<ResponseDto> create(@RequestBody Product product,
                                        @RequestHeader String userId) {
+
         if (!ProductValidator.validateCreateProduct(product, userId)) {
+            System.out.println(userId);
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "user data is invalid to create product"

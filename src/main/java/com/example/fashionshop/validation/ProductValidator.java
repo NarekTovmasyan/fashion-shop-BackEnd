@@ -8,11 +8,7 @@ import com.example.fashionshop.validation.commons.StockValidator;
 public final class ProductValidator {
     public static boolean validateUpdateProduct(Product product, String userId) {
 //        ImageValidator.checkDefaultImage(product);
-        System.out.println(product.getName().length() == 0);
-        System.out.println(product.getPrice() < 0);
-        System.out.println(!StockValidator.validateStock(product.getStock()));
-        System.out.println(!DescriptionValidator.validateDescription(product.getDescription()));
-        System.out.println(!UserValidator.checkUserAuthorized(userId));
+
         if (product.getName().length() == 0 ||
                 product.getPrice() < 0 ||
                 !StockValidator.validateStock(product.getStock()) ||

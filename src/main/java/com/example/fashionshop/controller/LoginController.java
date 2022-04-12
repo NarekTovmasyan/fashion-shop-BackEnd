@@ -27,16 +27,9 @@ public class LoginController {
      */
     @PostMapping("/signup")
     ResponseEntity<ResponseDto> signUp(@RequestBody User user) {
-
-
-        if (!UserValidator.checkUserSignUp(user)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "user data is invalid to signUp"
-            );
-        }
-        User user1 = userService.create(user);
-        ResponseDto responseDto=new ResponseDto("User is log in");
+        UserValidator.checkUserSignUp(user, HttpStatus.BAD_REQUEST, "user data is invalid to signUp");
+        User login = userService.create(user);
+        ResponseDto responseDto = new ResponseDto("User logged in.");
         responseDto.addInfo("UserId", String.valueOf(user));
         return ResponseEntity.ok(responseDto);
     }

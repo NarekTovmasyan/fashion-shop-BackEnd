@@ -32,6 +32,16 @@ public class ProductServiceImpl implements ProductService {
 
     /***
      *
+     * @return all data from DB, if there is not any data will return empty List.
+     */
+    @Override
+    public List<Product> getAll() {
+        return productRepository
+                .findAll();
+    }
+
+    /***
+     *
      * @param id with the help of it will find the object from DB.
      * @return returns founded object or throws @ResponseStatusException(BAD_REQUEST).
      */
@@ -45,31 +55,12 @@ public class ProductServiceImpl implements ProductService {
                 );
     }
 
-    @Override
-    public List<Product> getByAnyText(String anytext) {
-        List<Product> filter = getAll().stream().filter((item)->
-                        item.toString().toLowerCase(Locale.ROOT).contains(anytext.toLowerCase(Locale.ROOT)))
-                .collect(Collectors.toList());
-        return filter;
-    }
-
-    /***
-     *
-     * @return all data from DB, if there is not any data will return empty List.
-     */
-    @Override
-    public List<Product> getAll() {
-        return productRepository
-                .findAll();
-    }
-
     /***
      *
      * @param id is related to product which need to update
      * @param product is changed data
      * @returns just updated product
      */
-
     @Transactional
     @Override
     public Product update(long id, Product product) {

@@ -39,12 +39,7 @@ public class ImageController {
     ResponseEntity<ResponseDto> addImage(@PathVariable("product_id") long productId,
                                          @RequestParam("image") MultipartFile[] multipartFile,
                                          @RequestHeader String userId) {
-        if (!UserValidator.checkUserAuthorized(userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "user is unauthorized, please sign in first:"
-            );
-        }
+        UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         String serverUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String requestMapping = this.getClass().getAnnotation(RequestMapping.class).value()[0];
         String imageMappingPath = serverUrl+ "/" +requestMapping + IMAGE_URL_MAPPING_POST_FIX;
@@ -64,7 +59,6 @@ public class ImageController {
     @GetMapping(value =  "/get/{folder_name}/{img_name}")
     ResponseEntity<byte[]> getImagesByProductId(@PathVariable("folder_name") String folderName,
                                                 @PathVariable("img_name") String imageName) throws IOException {
-
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.IMAGE_PNG)
@@ -83,12 +77,7 @@ public class ImageController {
     ResponseEntity<ResponseDto> update(@PathVariable("product_id") long productId,
                                        @RequestParam("image") MultipartFile[] images,
                                        @RequestHeader String userId){
-        if (!UserValidator.checkUserAuthorized(userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "user is unauthorized, please sign in first:"
-            );
-        }
+        UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         String serverUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String requestMapping = this.getClass().getAnnotation(RequestMapping.class).value()[0];
         String imageMappingPath = serverUrl+ "/" +requestMapping + IMAGE_URL_MAPPING_POST_FIX;
@@ -97,7 +86,5 @@ public class ImageController {
         ResponseDto responseDto = new ResponseDto("Image updated.");
         responseDto.addInfo("productId", String.valueOf(productId));
         return ResponseEntity.ok(responseDto);
-
     }
-
 }

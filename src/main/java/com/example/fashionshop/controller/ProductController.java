@@ -5,6 +5,8 @@ import com.example.fashionshop.model.dto.responseDto.ResponseDto;
 import com.example.fashionshop.service.ImageService;
 import com.example.fashionshop.service.ProductService;
 import com.example.fashionshop.validation.ProductValidator;
+import com.example.fashionshop.validation.UserValidator;
+import com.example.fashionshop.validation.ValidationConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,22 @@ public class ProductController {
 
     /***
      *
-     * @param id is used to find the corresponding product with current id
-     * @return the necessary product by provided id
+     * @param product  is made from the provided information by front-end which includes
+     *                  •name
+     *                  •price
+     *                  •additional product details
+     * @param userId property is used to determine if the user has authorisation to make changes in database
+     * @return responseDto to inform front-end that process has been done successfully/ failed
      */
-    @GetMapping("/{id}")
-    ResponseEntity<Product> getById(@PathVariable long id) {
-        return ResponseEntity.ok(productService.getById(id));
+    @PostMapping
+    ResponseEntity<ResponseDto> create(@RequestBody Product product,
+                                       @RequestHeader String userId) {
+        UserValidator.checkUserAuthorized(userId,HttpStatus.UNAUTHORIZED, ValidationConstants.UNAUTHORIZED_ERROR);
+        ProductValidator.validateCreateProduct(product, HttpStatus.BAD_REQUEST, "product data is invalid to add in DB");
+        Product created = productService.create(product);
+        ResponseDto responseDto = new ResponseDto("Product created.");
+        responseDto.addInfo("productId", String.valueOf(created.getId()));
+        return ResponseEntity.ok(responseDto);
     }
 
     /***
@@ -44,27 +56,12 @@ public class ProductController {
 
     /***
      *
-     * @param product  is made from the provided information by front-end which includes
-     *                  •name
-     *                  •price
-     *                  •additional product details
-     * @param userId property is used to determine if the user has authorisation to make changes in database
-     * @return responseDto to inform front-end that process has been done successfully/ failed
+     * @param id is used to find the corresponding product with current id
+     * @return the necessary product by provided id
      */
-    @PostMapping
-    ResponseEntity<ResponseDto> create(@RequestBody Product product,
-                                       @RequestHeader String userId) {
-
-        if (!ProductValidator.validateCreateProduct(product, userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "user data is invalid to create product"
-            );
-        }
-        Product created = productService.create(product);
-        ResponseDto responseDto=new ResponseDto("Product created.");
-        responseDto.addInfo("productId", String.valueOf(created.getId()));
-        return ResponseEntity.ok(responseDto);
+    @GetMapping("/{id}")
+    ResponseEntity<Product> getById(@PathVariable long id) {
+        return ResponseEntity.ok(productService.getById(id));
     }
 
     /***
@@ -78,14 +75,10 @@ public class ProductController {
     ResponseEntity<ResponseDto> update(@PathVariable long id,
                                        @RequestBody Product product,
                                        @RequestHeader String userId) {
-        if (!ProductValidator.validateUpdateProduct(product, userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "user data is invalid to update product with id:" + id
-            );
-        }
+        UserValidator.checkUserAuthorized(userId,HttpStatus.UNAUTHORIZED, ValidationConstants.UNAUTHORIZED_ERROR);
+        ProductValidator.validateUpdateProduct(product, HttpStatus.BAD_REQUEST, "products data that you want to update does not matches to the product structure");
         Product updated = productService.update(id, product);
-        ResponseDto responseDto=new ResponseDto("Product updated.");
+        ResponseDto responseDto = new ResponseDto("Product updated.");
         responseDto.addInfo("productId", String.valueOf(updated.getId()));
         return ResponseEntity.ok(responseDto);
     }
@@ -99,12 +92,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseDto> delete(@PathVariable long id,
                                        @RequestHeader String userId){
-        if (!ProductValidator.validateDeleteProduct(userId)) {
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "user is unauthorized, please sign in first:"
-            );
-        }
+        ProductValidator.validateDeleteProduct(userId, HttpStatus.UNAUTHORIZED, "wrong");
         imageService.delete(id);
         productService.delete(id);
         ResponseDto responseDto = new ResponseDto("Product deleted.");

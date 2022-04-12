@@ -12,12 +12,14 @@ public class FileDatasource {
 
     public FileDatasource() {
         createDataFolder();
-
     }
 
     private void createDataFolder() {
-
-        dataFolder = new File(new File("").getAbsolutePath() + File.separator + FileConstants.DATA_FOLDER_NAME);
+        dataFolder = new File(
+                new File("")
+                        .getAbsolutePath()
+                        + File.separator
+                        + FileConstants.DATA_FOLDER_NAME);
 
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
@@ -40,12 +42,11 @@ public class FileDatasource {
         return imageFolder.getPath();
     }
 
-    public String getFolderPathByProduct(Product product){
-        return dataFolder.getPath()+File.separator+product.getName()+"_"+product.getId();
+    public String getFolderPathByProduct(Product product) {
+        return dataFolder.getPath() + File.separator + product.getName() + "_" + product.getId();
     }
 
-    public void deleteProductFolderByFolderName(String folderName){
-
+    public void deleteProductFolderByFolderName(String folderName) {
         File imageFolder = new File(
                 new File("").getAbsolutePath() +
                         File.separator
@@ -57,7 +58,5 @@ public class FileDatasource {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }

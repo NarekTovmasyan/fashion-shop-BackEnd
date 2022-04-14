@@ -22,9 +22,9 @@ public final class UserValidator {
         UserValidator.userService = userServiceT;
     }
 
-    public static void checkUserAuthorized(String user_id, HttpStatus status, String message) {
+    public static void checkUserAuthorized(String userId, HttpStatus status, String message) {
         try{
-            if (user_id == null || userService.getById(user_id) == null) {
+            if (userId == null || userService.getById(userId) == null) {
                 throw new ResponseStatusException(status, message);
             }
         }catch (ResponseStatusException statusException){

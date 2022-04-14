@@ -61,7 +61,7 @@ public class OrderController {
      * @return returns to front-end all the orders by current user,if process has been done authorized/ unauthorized
      */
     @GetMapping("/user-order")
-    ResponseEntity<List<Order>> getOrdersByUserId(@RequestHeader String userId) {
+    ResponseEntity<List<Order>> getOrdersByUserId(@RequestHeader("user_id") String userId) {
 
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         return ResponseEntity.ok(orderService.getAllById(userId));
@@ -74,7 +74,7 @@ public class OrderController {
      * @return returns an array of orders that matched provided user id and order status
      */
     @GetMapping("/order-status")
-    ResponseEntity<List<Order>> getOrderByStatus(@RequestHeader String userId,
+    ResponseEntity<List<Order>> getOrderByStatus(@RequestHeader("user_id") String userId,
                                                  @RequestHeader("status") OrderStatus orderStatus){
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         return ResponseEntity.ok(orderService.getOrderByStatus(userId, orderStatus));

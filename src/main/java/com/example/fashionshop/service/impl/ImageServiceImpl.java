@@ -159,7 +159,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void delete(long id) {
         new FileDatasource().deleteProductFolderByFolderName(generateFolderName(productRepository.getById(id)));
-
     }
 
     /***

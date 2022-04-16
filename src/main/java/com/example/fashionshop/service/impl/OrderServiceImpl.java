@@ -34,8 +34,17 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order create(Order order) {
-        order.setOrderStatus(OrderStatus.UNPAID);
+        order.setOrderStatus(OrderStatus.PENDING);
         return orderRepository.save(order);
+    }
+
+    /***
+     *
+     * @return all data from DB, if there is not any data will return empty List.
+     */
+    @Override
+    public List<Order> getAll() {
+        return orderRepository.findAll();
     }
 
     /***
@@ -62,16 +71,6 @@ public class OrderServiceImpl implements OrderService {
         );
     }
 
-    /***
-     *
-     * @return all data from DB, if there is not any data will return empty List.
-     */
-    @Override
-    public List<Order> getAll() {
-        return orderRepository.findAll();
-    }
-
-
 //    @Transactional
 //    @Override
 //    public Order update(String id, OrderUpdateReqDto reqDto) {
@@ -90,15 +89,6 @@ public class OrderServiceImpl implements OrderService {
 
     /***
      *
-     * @param id find the order with provided id and deletes it
-     */
-    @Override
-    public void delete(Long id) {
-        orderRepository.deleteById(id);
-    }
-
-    /***
-     *
      * @param userId property is used to determine if the user
      *               has authorisation to get orders by provided status from DB
      * @param orderStatus is the provided status
@@ -106,7 +96,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> getOrderByStatus(String userId, OrderStatus orderStatus) {
-        return getAllById(userId).stream()
+        return getAll().stream()
                 .filter(item->item.getOrderStatus()==orderStatus)
                 .collect(Collectors.toList());
     }
@@ -125,6 +115,15 @@ public class OrderServiceImpl implements OrderService {
         Product product = productService.getById(fromDb.getProduct().getId());
         product.updateStock(fromDb.getOrderStatus(), orderStatus, fromDb.getCount());
         fromDb.setOrderStatus(orderStatus);
+    }
+
+    /***
+     *
+     * @param id find the order with provided id and deletes it
+     */
+    @Override
+    public void delete(Long id) {
+        orderRepository.deleteById(id);
     }
 }
 

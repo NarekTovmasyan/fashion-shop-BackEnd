@@ -2,19 +2,16 @@ package com.example.fashionshop.controller;
 
 import com.example.fashionshop.model.Order;
 import com.example.fashionshop.model.commons.enums.OrderStatus;
-import com.example.fashionshop.model.dto.requestDto.OrderUpdateReqDto;
 import com.example.fashionshop.model.dto.responseDto.ResponseDto;
 import com.example.fashionshop.service.OrderService;
 import com.example.fashionshop.validation.OrderValidator;
 import com.example.fashionshop.validation.ProductValidator;
 import com.example.fashionshop.validation.UserValidator;
 import com.example.fashionshop.validation.ValidationConstants;
-import com.example.fashionshop.validation.dto.OrderDtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -93,7 +90,7 @@ public class OrderController {
                                              @PathVariable("order_id") Long orderId,
                                              @PathVariable("status") OrderStatus orderStatus){
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
-        OrderValidator.validateOrderChangeStatus(orderService.getOrderById(orderId),orderStatus, HttpStatus.BAD_REQUEST, "products in stock is not available or the count is not enough!");
+        OrderValidator.validateOrderChangeStatus(orderService.getOrdersByUserId(orderId),orderStatus, HttpStatus.BAD_REQUEST, "products in stock is not available or the count is not enough!");
         orderService.changeStatus(orderId, orderStatus);
         ResponseDto responseDto = new ResponseDto("OrderStatus changed.");
         responseDto.addInfo("OrderStatus", String.valueOf(orderId));

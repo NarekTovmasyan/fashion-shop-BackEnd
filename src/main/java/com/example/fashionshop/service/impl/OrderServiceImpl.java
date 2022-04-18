@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrderById(long orderId) {
+    public Order getOrdersByUserId(long orderId) {
         return orderRepository.findById(orderId).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST,

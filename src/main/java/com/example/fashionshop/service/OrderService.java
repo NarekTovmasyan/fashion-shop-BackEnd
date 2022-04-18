@@ -12,7 +12,7 @@ public interface OrderService {
 
     List<Order> getAll();
 
-    Order getOrderById(long orderId);
+    Order getOrdersByUserId(long orderId);
 
     List<Order> getAllById(String id);
 

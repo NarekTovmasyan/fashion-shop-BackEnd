@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +46,14 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<Order> getAll() {
-        return orderRepository.findAll();
+        List<Order> all = orderRepository.findAll();
+        Collections.sort(all, new Comparator<Order>() {
+            @Override
+            public int compare(Order o1, Order o2) {
+                return (int) (o2.getDate()- o1.getDate());
+            }
+        });
+        return all;
     }
 
     /***

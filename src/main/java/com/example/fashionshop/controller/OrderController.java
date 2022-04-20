@@ -93,7 +93,7 @@ public class OrderController {
         OrderValidator.validateOrderChangeStatus(orderService.getOrdersByUserId(orderId),orderStatus, HttpStatus.BAD_REQUEST, "products in stock is not available or the count is not enough!");
         orderService.changeStatus(orderId, orderStatus);
         ResponseDto responseDto = new ResponseDto("OrderStatus changed.");
-        responseDto.addInfo("OrderStatus", String.valueOf(orderId));
+        responseDto.addInfo("orderStatus", String.valueOf(orderId));
         return ResponseEntity.ok(responseDto);
     }
 

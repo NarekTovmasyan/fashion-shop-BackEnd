@@ -7,6 +7,8 @@ import com.example.fashionshop.model.commons.enums.Currency;
 import com.example.fashionshop.model.commons.enums.OrderStatus;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import java.util.List;
@@ -37,8 +39,11 @@ public class Product {
     private List<Image> img;
 
     public void updateStock(OrderStatus oldStatus, OrderStatus newStatus, int count) {
-
+        if (!stock.getIsAvailable()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"products in stock is not available or the count is not enough!");
+        }
         switch (oldStatus) {
+            case PENDING:
             case UNPAID:
                 if (newStatus == OrderStatus.PAID) {
                     Stock stock = this.getStock();
@@ -46,10 +51,8 @@ public class Product {
                 }
                 break;
             case PAID:
-            case PENDING:
             case SENT:
             case DONE:
-
                 break;
         }
 

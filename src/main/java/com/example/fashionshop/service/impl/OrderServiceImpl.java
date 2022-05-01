@@ -3,7 +3,6 @@ package com.example.fashionshop.service.impl;
 import com.example.fashionshop.model.Order;
 import com.example.fashionshop.model.Product;
 import com.example.fashionshop.model.commons.enums.OrderStatus;
-import com.example.fashionshop.model.dto.requestDto.OrderUpdateReqDto;
 import com.example.fashionshop.repository.OrderRepository;
 import com.example.fashionshop.service.OrderService;
 import com.example.fashionshop.service.ProductService;
@@ -50,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
         Collections.sort(all, new Comparator<Order>() {
             @Override
             public int compare(Order o1, Order o2) {
-                return (int) (o2.getDate()- o1.getDate());
+                return (int) (o2.getDate() - o1.getDate());
             }
         });
         return all;
@@ -106,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getOrderByStatus(String userId, OrderStatus orderStatus) {
         return getAll().stream()
-                .filter(item->item.getOrderStatus()==orderStatus)
+                .filter(item -> item.getOrderStatus() == orderStatus)
                 .collect(Collectors.toList());
     }
 

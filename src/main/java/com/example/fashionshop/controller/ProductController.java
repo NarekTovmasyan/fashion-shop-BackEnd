@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class ProductController {
     @PostMapping
     ResponseEntity<ResponseDto> create(@RequestBody Product product,
                                        @RequestHeader String userId) {
-        UserValidator.checkUserAuthorized(userId,HttpStatus.UNAUTHORIZED, ValidationConstants.UNAUTHORIZED_ERROR);
+        UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, ValidationConstants.UNAUTHORIZED_ERROR);
         ProductValidator.validateCreateProduct(product, HttpStatus.BAD_REQUEST, "product data is invalid to add in DB");
         Product created = productService.create(product);
         ResponseDto responseDto = new ResponseDto("Product created.");
@@ -75,7 +74,7 @@ public class ProductController {
     ResponseEntity<ResponseDto> update(@PathVariable long id,
                                        @RequestBody Product product,
                                        @RequestHeader String userId) {
-        UserValidator.checkUserAuthorized(userId,HttpStatus.UNAUTHORIZED, ValidationConstants.UNAUTHORIZED_ERROR);
+        UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, ValidationConstants.UNAUTHORIZED_ERROR);
         ProductValidator.validateUpdateProduct(product, HttpStatus.BAD_REQUEST, "products data that you want to update does not matches to the product structure");
         Product updated = productService.update(id, product);
         ResponseDto responseDto = new ResponseDto("Product updated.");
@@ -91,7 +90,7 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseDto> delete(@PathVariable long id,
-                                       @RequestHeader String userId){
+                                       @RequestHeader String userId) {
         ProductValidator.validateDeleteProduct(userId, HttpStatus.UNAUTHORIZED, "wrong");
         imageService.delete(id);
         productService.delete(id);

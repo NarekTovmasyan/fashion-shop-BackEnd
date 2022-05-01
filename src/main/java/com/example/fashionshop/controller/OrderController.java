@@ -72,7 +72,7 @@ public class OrderController {
      */
     @GetMapping("/order-status")
     ResponseEntity<List<Order>> getOrderByStatus(@RequestHeader("user_id") String userId,
-                                                 @RequestHeader("status") OrderStatus orderStatus){
+                                                 @RequestHeader("status") OrderStatus orderStatus) {
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         return ResponseEntity.ok(orderService.getOrderByStatus(userId, orderStatus));
     }
@@ -88,9 +88,9 @@ public class OrderController {
     @PutMapping("/change-status/{order_id}/{status}")
     ResponseEntity<ResponseDto> changeStatus(@RequestHeader("user_id") String userId,
                                              @PathVariable("order_id") Long orderId,
-                                             @PathVariable("status") OrderStatus orderStatus){
+                                             @PathVariable("status") OrderStatus orderStatus) {
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
-        OrderValidator.validateOrderChangeStatus(orderService.getOrdersByUserId(orderId),orderStatus, HttpStatus.BAD_REQUEST, "products in stock is not available or the count is not enough!");
+        OrderValidator.validateOrderChangeStatus(orderService.getOrdersByUserId(orderId), orderStatus, HttpStatus.BAD_REQUEST, "products in stock is not available or the count is not enough!");
         orderService.changeStatus(orderId, orderStatus);
         ResponseDto responseDto = new ResponseDto("OrderStatus changed.");
         responseDto.addInfo("orderStatus", String.valueOf(orderId));

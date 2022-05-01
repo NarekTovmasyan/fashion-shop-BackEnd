@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class ImageController {
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         String serverUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String requestMapping = this.getClass().getAnnotation(RequestMapping.class).value()[0];
-        String imageMappingPath = serverUrl+ "/" +requestMapping + IMAGE_URL_MAPPING_POST_FIX;
+        String imageMappingPath = serverUrl + "/" + requestMapping + IMAGE_URL_MAPPING_POST_FIX;
         Product created = imageService.saveImagesToFolder(productId, multipartFile, imageMappingPath);
         ResponseDto responseDto = new ResponseDto("Image created.");
         responseDto.addInfo("productId", String.valueOf(productId));
@@ -56,7 +55,7 @@ public class ImageController {
      * @return byte[] value is file information which will be send to front-end
      * @throws IOException can be thrown if something goes wrong with @param in File System
      */
-    @GetMapping(value =  "/get/{folder_name}/{img_name}")
+    @GetMapping(value = "/get/{folder_name}/{img_name}")
     ResponseEntity<byte[]> getImagesByProductId(@PathVariable("folder_name") String folderName,
                                                 @PathVariable("img_name") String imageName) throws IOException {
         return ResponseEntity
@@ -76,11 +75,11 @@ public class ImageController {
     @PutMapping("/update/{product_id}")
     ResponseEntity<ResponseDto> update(@PathVariable("product_id") long productId,
                                        @RequestParam("image") MultipartFile[] images,
-                                       @RequestHeader String userId){
+                                       @RequestHeader String userId) {
         UserValidator.checkUserAuthorized(userId, HttpStatus.UNAUTHORIZED, "user is UNAUTHORIZED, plz SignUp at first");
         String serverUrl = ServletUriComponentsBuilder.fromCurrentContextPath().toUriString();
         String requestMapping = this.getClass().getAnnotation(RequestMapping.class).value()[0];
-        String imageMappingPath = serverUrl+ "/" +requestMapping + IMAGE_URL_MAPPING_POST_FIX;
+        String imageMappingPath = serverUrl + "/" + requestMapping + IMAGE_URL_MAPPING_POST_FIX;
         Image updated = imageService.update(productId, images, imageMappingPath);
         ResponseDto responseDto = new ResponseDto("Image updated.");
         responseDto.addInfo("productId", String.valueOf(productId));
